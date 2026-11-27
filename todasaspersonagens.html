@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todas as Personagens - Unikitty! & Unikingdom</title>
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 45%, #a1c4fd 100%);
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --primary: #ff2e93;
+      --secondary: #00b4d8;
+      --text-dark: #2b2d42;
+      --text-muted: #5c6378;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: var(--bg-gradient);
+      background-attachment: fixed;
+      color: var(--text-dark);
+      min-height: 100vh;
+      padding: 2rem 1rem 4rem;
+      overflow-x: hidden;
+    }
+
+    header {
+      text-align: center;
+      max-width: 850px;
+      margin: 0 auto 2rem;
+      background: var(--card-bg);
+      padding: 2rem;
+      border-radius: 28px;
+      box-shadow: 0 12px 30px rgba(255, 46, 147, 0.2);
+      border: 4px solid #fff;
+    }
+
+    header h1 {
+      font-size: 2.4rem;
+      color: var(--primary);
+      text-shadow: 2px 2px 0px #ffe5ec;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.75rem;
+      max-width: 900px;
+      margin: 0 auto 2.5rem;
+    }
+
+    .filter-btn {
+      background: #fff;
+      border: 3px solid var(--primary);
+      color: var(--primary);
+      padding: 0.6rem 1.2rem;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--primary);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(255, 46, 147, 0.35);
+    }
+
+    .search-box {
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto 2rem;
+      display: block;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 0.85rem 1.4rem;
+      border-radius: 50px;
+      border: 3px solid #fff;
+      font-size: 1rem;
+      outline: none;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+      transition: border-color 0.2s;
+    }
+
+    .search-box input:focus {
+      border-color: var(--primary);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.8rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 24px;
+      padding: 1.5rem;
+      text-align: center;
+      border: 4px solid #fff;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 18px 35px rgba(255, 46, 147, 0.25);
+    }
+
+    .badge {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-heroi { background: #ffe5ec; color: #d90429; }
+    .badge-vilao { background: #2b2d42; color: #ffd166; }
+    .badge-secundario { background: #e0fbfc; color: #0077b6; }
+
+    .avatar-box {
+      width: 130px;
+      height: 130px;
+      margin: 0.5rem auto 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: radial-gradient(circle, #ffffff 40%, #f8f9fa 100%);
+      box-shadow: inset 0 0 15px rgba(0,0,0,0.06);
+    }
+
+    .card h2 {
+      font-size: 1.45rem;
+      margin-bottom: 0.3rem;
+      color: var(--text-dark);
+    }
+
+    .role {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.8rem;
+      text-transform: uppercase;
+    }
+
+    .desc {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 1.2rem;
+    }
+
+    .sparkle-btn {
+      background: linear-gradient(90deg, #ff2e93, #ff758f);
+      color: #fff;
+      border: none;
+      padding: 0.65rem 1rem;
+      border-radius: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      width: 100%;
+    }
+
+    .sparkle-btn:hover {
+      opacity: 0.92;
+    }
+
+    .sparkle-btn:active {
+      transform: scale(0.96);
+    }
+
+    .quote-toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(120px);
+      background: #2b2d42;
+      color: #fff;
+      padding: 1rem 1.8rem;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      border: 3px solid #ffd166;
+      z-index: 1000;
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      text-align: center;
+      max-width: 90vw;
+    }
+
+    .quote-toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .particle {
+      position: fixed;
+      pointer-events: none;
+      font-size: 1.4rem;
+      animation: floatUp 1.1s ease-out forwards;
+      z-index: 999;
+    }
+
+    @keyframes floatUp {
+      0% { opacity: 1; transform: translateY(0) scale(0.8) rotate(0deg); }
+      100% { opacity: 0; transform: translateY(-90px) scale(1.4) rotate(25deg); }
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 3.5rem;
+      color: var(--text-dark);
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🦄🐱 Todas as Personagens de Unikitty!</h1>
+    <p>Explora os habitantes do Reino Unikingdom, os seus aliados e os vilões de Frowntown!</p>
+  </header>
+
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="🔍 Pesquisar personagem ou característica...">
+  </div>
+
+  <div class="controls">
+    <button class="filter-btn active" data-filter="todos">Todas (10)</button>
+    <button class="filter-btn" data-filter="heroi">Castelo & Heróis</button>
+    <button class="filter-btn" data-filter="vilao">Vilões de Frowntown</button>
+    <button class="filter-btn" data-filter="secundario">Habitantes do Reino</button>
+  </div>
+
+  <main class="grid" id="charactersGrid"></main>
+
+  <div class="quote-toast" id="quoteToast"></div>
+
+  <footer>
+    Reino Unikingdom • Feito com Matéria Brilhante ✨
+  </footer>
+
+  <script>
+    const characters = [
+      {
+        name: "Princesa Unikitty",
+        role: "Governante do Unikingdom",
+        category: "heroi",
+        badge: "Herói",
+        desc: "Metade unicórnio, metade gata. É super otimista, adora festas e matéria brilhante, mas explode numa fúria ardente se magoarem os seus amigos.",
+        quote: "✨ Vamos espalhar positividade e matéria brilhante por todo o reino!",
+        emoji: "🦄",
+        svg: `<svg viewBox="0 0 120 120" width="110" height="110">
+          <polygon points="60,8 52,36 68,36" fill="#3a86ff"/>
+          <polygon points="28,25 22,52 44,44" fill="#ff006e"/>
+          <polygon points="92,25 98,52 76,44" fill="#ff006e"/>
+          <rect x="26" y="36" width="68" height="58" rx="14" fill="#ff70a6"/>
+          <circle cx="44" cy="60" r="9" fill="#fff"/>
+          <circle cx="76" cy="60" r="9" fill="#fff"/>
+          <circle cx="45" cy="60" r="5" fill="#1d1e2c"/>
+          <circle cx="75" cy="60" r="5" fill="#1d1e2c"/>
+          <circle cx="35" cy="74" r="5" fill="#ff006e" opacity="0.6"/>
+          <circle cx="85" cy="74" r="5" fill="#ff006e" opacity="0.6"/>
+          <path d="M54 72 Q60 79 66 72" stroke="#1d1e2c" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        </svg>`
+      },
+      {
+        name: "Príncipe Puppycorn",
+        role: "Irmão Mais Novo",
+        category: "heroi",
+        badge: "Herói",
+        desc: "Metade cão pug, metade unicórnio. É ingénuo, adora andar de skate, comer pizza e brincar com o seu melhor amigo Dino Dude.",
+        quote: "🛹 Mano! Alguém disse pizza com extra queijo?!",
+        emoji: "🐶",
+        svg: `<svg viewBox="0 0 120 120" width="110" height="110">
+          <polygon points="60,10 53,36 67,36" fill="#ffbe0b"/>
+          <rect x="18" y="38" width="14" height="28" rx="6" fill="#1d3557"/>
+          <rect x="88" y="38" width="14" height="28" rx="6" fill="#1d3557"/>
+          <rect x="28" y="36" width="64" height="58" rx="14" fill="#3a86ff"/>
+          <rect x="36" y="64" width="48" height="24" rx="10" fill="#f4d58d"/>
+          <circle cx="45" cy="54" r="8" fill="#fff"/>
+          <circle cx="75" cy="54" r="8" fill="#fff"/>
+          <circle cx="46" cy="54" r="4.5" fill="#1d1e2c"/>
+          <circle cx="74" cy="54" r="4.5" fill="#1d1e2c"/>
+          <ellipse cx="60" cy="68" rx="6" ry="4" fill="#1d1e2c"/>
+          <path d="M50 78 Q60 85 70 78" stroke="#1d1e2c" stroke-width="3" fill="none"/>
+        </svg>`
+      },
+      {
+        name: "Dra. Fox",
+        role: "Cientista Residente",
+        category: "heroi",
+        badge: "Herói",
+        desc: "Uma raposa brilhante e entusiasta da ciência. As suas experiências no laboratório do castelo frequentemente criam o caos mais divertido do reino.",
+        quote: "🧪 Pela ciência! Só preciso de mais uma amostra de matéria brilhante!",
+        emoji: "🦊",
+        svg: `<svg viewBox="0 0 120 120" width="110" height="110">
+          <polygon points="26,20 20,52 46,42" fill="#fb8500"/>
+          <polygon points="94,20 100,52 74,42" fill="#fb8500"/>
+          <rect x="28" y="38" width="64" height="54" rx="16" fill="#fb8500"/>
+          <polygon points="28,68 60,92 92,68 92,92 28,92" fill="#fff"/>
+          <rect x="34" y="50" width="22" height="16" rx="4" fill="none" stroke="#1d1e2c" stroke-width="3"/>
+          <rect x="64" y="50" width="22" height="16" rx="4" fill="none" stroke="#1d1e2c" stroke-width="3"/>
+          <line x1="56" y1="58" x2="64" y2="58" stroke="#1d1e2c" stroke-width="3"/>
+          <circle cx="45" cy="58" r="3.5" fill="#1d1e2c"/>
+          <circle cx="75" cy="58" r="3.5" fill="#1d1e2c"/>
+          <circle cx="60" cy="72" r="4.5" fill="#1d1e2c"/>
+        </svg>`
+      },
+      {
+        name: "Falcão Crocodilo (Hawkodile)",
+        role: "Guarda-Costas",
+        category: "heroi",
+        badge: "Herói",
+        desc: "Metade falcão, metade crocodilo. Treinado em artes marciais, leva a segurança da Princesa Unikitty muito a sério e tem uma queda secreta pela Dra. Fox.",
+        quote: "🕶️ Perigo detetado! Ninguém toca na Princesa enquanto eu estiver de guarda!",
+        emoji: "🦅",
+        svg: `<svg viewBox="0 0 120 120" width="110" height="110">
+          <rect x="26" y="34" width="68" height="60" rx="14" fill="#52b788"/>
+          <polygon points="32,48 56,52 56,64 30,60" fill="#1d1e2c"/>
+          <polygon points="88,48 64,52 64,64 90,60" fill="#1d1e2c"/>
+          <line x1="56" y1="55" x2="64" y2="55" stroke="#1d1e2c" stroke-width="4"/>
+          <polygon points="52,66 68,66 60,78" fill="#ffb703"/>
+          <path d="M40 84 L46 80 L52 84 L58 80 L64 84 L70 80 L76 84" stroke="#fff" stroke-width="3" fill="none"/>
+        </svg>`
+      },
+      {
+        name: "Richard (Rick)",
+        role: "Mordomo Real",
+        category: "heroi",
+        badge: "Herói",
+        desc: "Um bloco cinzento flutuante de 1x3 que adora limpezas, regras, organização e coisas extremamente aborrecidas, mas tem um coração de ouro.",
+        quote: "🧹 Alguém se lembrou de aspirar os confetis antes da reunião das 15h?",
+        emoji: "🧱",
+        svg: `<svg viewBox="0 0 120 120" width="110" height="110">
+          <rect x="44" y="14" width="32" height="8" rx="2" fill="#adb5bd"/>
+          <rect x="38" y="22" width="44" height="82" rx="6" fill="#ced4da" stroke="#6c757d" stroke-width="3"/>
+          <circle cx="50" cy="48" r="4" fill="#212529"/>
+          <circle cx="70" cy="48" r="4" fill="#212529"/>
+          <line x1="45" y1="41" x2="55" y2="43" stroke="#212529" stroke-width="2.5"/>
+          <line x1="65" y1="43" x2="75" y2="41" stroke="#212529" stroke-width="2.5"/>
+          <line x1="50" y1="66" x2="70" y2="66" stroke="#212529" stroke-width="3" stroke-linecap="round"/>
+        </svg>`
+      },
+      {
+        name: "Master Frown",
+        role: "Arquivilão de Frowntown",
+        category: "vilao",
+        badge: "Vilão",
+        desc: "Um Lorde da Perdição que detesta felicidade e tenta constantemente arruinar os planos da Unikitty para impressionar os seus chefes.",
+        quote: "😈 Muahaha! Vou estragar esta festa e transformar tudo em tristeza!",
+        emoji: "🦹",
+        svg: `<svg viewBox="0 0 120 120" width="110" height="110">
+          <path d="M26 55 Q60 12 94 55 L94 96 L26 96 Z" fill="#212529"/>
+          <rect x="36" y="46" width="48" height="36" rx="8" fill="#ffd166"/>
+          <polygon points="40,56 56,62 40,64" fill="#d90429"/>
+          <polygon points="80,56 64,62 80,64" fill="#d90429"/>
+          <path d="M46 76 Q60 68 74 76" stroke="#212529" stroke-width="3.5" fill="none"/>
+        </svg>`
+      },
+      {
+        name: "Brock",
+        role: "Colega de Quarto do Master Frown",
+        category: "vilao",
+        badge: "Vilão?",
+        desc: "Uma lápide antropomórfica descontraída que vive com o Master Frown. Prefere jogar videojogos e fazer bolachas do que praticar maldades.",
+        quote: "🎮 Ei cara, acabei de fazer bolachas com pepitas de chocolate! Queres?",
+        emoji: "🪦",
+        svg: `<svg viewBox="0 0 120 120" width="110" height="110">
+          <path d="M32 96 L32 46 A28 28 0 0 1 88 46 L88 96 Z" fill="#8d99ae" stroke="#2b2d42" stroke-width="3"/>
+          <circle cx="48" cy="54" r="5" fill="#2b2d42"/>
+          <circle cx="72" cy="54" r="5" fill="#2b2d42"/>
+          <path d="M50 70 Q60 78 70 70" stroke="#2b2d42" stroke-width="3" fill="none" stroke-linecap="round"/>
+        </svg>`
+      },
+      {
+        name: "Master Doom & Lordes da Perdição",
+        role: "Líderes Supremos de Frowntown",
+        category: "vilao",
+        badge: "Vilão",
+        desc: "Os chefes sinistros e exigentes de Frowntown que avaliam o desempenho dos vilões e exigem níveis máximos de miséria e mau humor.",
+        quote: "🌑 Mais tristeza! Menos arco-íris! O relatório de miséria está atrasado!",
+        emoji: "👑",
+        svg: `<svg viewBox="0 0 120 120" width="110" height="110">
+          <polygon points="30,36 42,16 60,32 78,16 90,36" fill="#ffbe0b"/>
+          <rect x="28" y="36" width="64" height="60" rx="12" fill="#3c096c"/>
+          <circle cx="46" cy="60" r="7" fill="#ff006e"/>
+          <circle cx="74" cy="60" r="7" fill="#ff006e"/>
+          <path d="M44 80 L54 74 L60 80 L66 74 L76 80" stroke="#fff" stroke-width="3" fill="none"/>
+        </svg>`
+      },
+      {
+        name: "Feebee",
+        role: "Dona da Loja de Flores",
+        category: "secundario",
+        badge: "Habitante",
+        desc: "Uma abelha florista trabalhadora e dedicada que adora plantas tanto quanto o seu trabalho, mas fica em pânico se as flores murcharem.",
+        quote: "🌻 Bem-vindos à minha loja! As flores hoje estão especialmente radiantes!",
+        emoji: "🐝",
+        svg: `<svg viewBox="0 0 120 120" width="110" height="110">
+          <ellipse cx="26" cy="52" rx="14" ry="10" fill="#caf0f8" stroke="#00b4d8" stroke-width="2"/>
+          <ellipse cx="94" cy="52" rx="14" ry="10" fill="#caf0f8" stroke="#00b4d8" stroke-width="2"/>
+          <rect x="32" y="34" width="56" height="60" rx="22" fill="#ffd166"/>
+          <rect x="32" y="54" width="56" height="10" fill="#1d1e2c"/>
+          <rect x="32" y="74" width="56" height="10" fill="#1d1e2c"/>
+          <circle cx="48" cy="46" r="5" fill="#1d1e2c"/>
+          <circle cx="72" cy="46" r="5" fill="#1d1e2c"/>
+        </svg>`
+      },
+      {
+        name: "Bim Bom",
+        role: "Cidadão Entusiasta",
+        category: "secundario",
+        badge: "Habitante",
+        desc: "Um dos cidadãos mais expressivos do Unikingdom. Está sempre pronto para celebrar qualquer evento ou entrar em pânico dramático.",
+        quote: "🎉 Isto é a melhor coisa que alguma vez aconteceu no Unikingdom!",
+        emoji: "🎈",
+        svg: `<svg viewBox="0 0 120 120" width="110" height="110">
+          <circle cx="60" cy="62" r="34" fill="#9b5de5"/>
+          <circle cx="48" cy="54" r="6" fill="#fff"/>
+          <circle cx="72" cy="54" r="6" fill="#fff"/>
+          <circle cx="48" cy="54" r="3" fill="#1d1e2c"/>
+          <circle cx="72" cy="54" r="3" fill="#1d1e2c"/>
+          <ellipse cx="60" cy="72" rx="10" ry="8" fill="#ff006e"/>
+        </svg>`
+      }
+    ];
+
+    const grid = document.getElementById('charactersGrid');
+    const searchInput = document.getElementById('searchInput');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const toast = document.getElementById('quoteToast');
+
+    let currentFilter = 'todos';
+    let toastTimeout;
+
+    function createParticles(x, y, emoji) {
+      for (let i = 0; i < 6; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.textContent = i % 2 === 0 ? emoji : '✨';
+        p.style.left = (x + (Math.random() * 80 - 40)) + 'px';
+        p.style.top = (y + (Math.random() * 40 - 20)) + 'px';
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 1100);
+      }
+    }
+
+    function showQuote(quote) {
+      toast.textContent = quote;
+      toast.classList.add('show');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3200);
+    }
+
+    function renderCards() {
+      const term = searchInput.value.toLowerCase().trim();
+      grid.innerHTML = '';
+
+      const filtered = characters.filter(c => {
+        const matchesFilter = currentFilter === 'todos' || c.category === currentFilter;
+        const matchesSearch = c.name.toLowerCase().includes(term) ||
+                              c.role.toLowerCase().includes(term) ||
+                              c.desc.toLowerCase().includes(term);
+        return matchesFilter && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; background:#fff; padding:2rem; border-radius:20px; font-weight:bold;">Nenhuma personagem encontrada com esse termo! 😿</div>`;
+        return;
+      }
+
+      filtered.forEach(char => {
+        const card = document.createElement('article');
+        card.className = 'card';
+
+        const badgeClass = char.category === 'heroi' ? 'badge-heroi' :
+                           char.category === 'vilao' ? 'badge-vilao' : 'badge-secundario';
+
+        card.innerHTML = `
+          <span class="badge ${badgeClass}">${char.badge}</span>
+          <div>
+            <div class="avatar-box">${char.svg}</div>
+            <h2>${char.name}</h2>
+            <div class="role">${char.role}</div>
+            <p class="desc">${char.desc}</p>
+          </div>
+          <button class="sparkle-btn">Ouvir Frase & Brilho ${char.emoji}</button>
+        `;
+
+        const btn = card.querySelector('.sparkle-btn');
+        btn.addEventListener('click', (e) => {
+          showQuote(char.quote);
+          createParticles(e.clientX, e.clientY, char.emoji);
+        });
+
+        grid.appendChild(card);
+      });
+    }
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.filter;
+        renderCards();
+      });
+    });
+
+    searchInput.addEventListener('input', renderCards);
+
+    renderCards();
+  </script>
+</body>
+</html>
