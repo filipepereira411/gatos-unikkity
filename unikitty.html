@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unikitty! - Reino Unikingdom</title>
+<style>
+  :root {
+    --pink: #ff69b4;
+    --hot-pink: #ff1493;
+    --blue: #00bfff;
+    --yellow: #ffd700;
+    --purple: #9b59b6;
+    --bg: #fff0f6;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+  body {
+    background: linear-gradient(135deg, #ffe6f2 0%, #e6f7ff 50%, #fff9db 100%);
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    overflow-x: hidden;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 25px 40px;
+    background: white;
+    border-radius: 30px;
+    box-shadow: 0 10px 25px rgba(255, 105, 180, 0.25);
+    border: 4px solid var(--pink);
+    max-width: 800px;
+    width: 100%;
+  }
+  h1 {
+    font-size: 3rem;
+    background: linear-gradient(to right, #ff1493, #9b59b6, #00bfff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
+  }
+  .subtitle {
+    font-size: 1.2rem;
+    color: #666;
+    font-weight: 500;
+  }
+  .stage {
+    background: white;
+    border-radius: 30px;
+    padding: 30px;
+    box-shadow: 0 12px 30px rgba(0, 191, 255, 0.2);
+    border: 4px solid var(--blue);
+    max-width: 800px;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 30px;
+    position: relative;
+  }
+  .unikitty-svg {
+    width: 240px;
+    height: 240px;
+    margin: 0 auto 20px;
+    transition: transform 0.3s ease;
+  }
+  .unikitty-svg.bounce {
+    animation: bounce 0.6s infinite alternate;
+  }
+  .unikitty-svg.rage {
+    animation: shake 0.15s infinite;
+  }
+  @keyframes bounce {
+    from { transform: translateY(0); }
+    to { transform: translateY(-15px); }
+  }
+  @keyframes shake {
+    0% { transform: translate(2px, 1px) rotate(0deg); }
+    25% { transform: translate(-2px, -2px) rotate(-2deg); }
+    50% { transform: translate(-3px, 1px) rotate(2deg); }
+    75% { transform: translate(2px, 2px) rotate(-1deg); }
+    100% { transform: translate(1px, -1px) rotate(1deg); }
+  }
+  .controls {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 15px;
+  }
+  button {
+    padding: 12px 22px;
+    border: none;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    color: white;
+  }
+  button:hover { transform: scale(1.05); }
+  button:active { transform: scale(0.95); }
+  .btn-happy { background: linear-gradient(45deg, #ff69b4, #ff1493); box-shadow: 0 4px 15px rgba(255, 20, 147, 0.4); }
+  .btn-sparkle { background: linear-gradient(45deg, #ffd700, #ffa500); color: #333; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4); }
+  .btn-rage { background: linear-gradient(45deg, #ff4500, #dc143c); box-shadow: 0 4px 15px rgba(220, 20, 60, 0.4); }
+  .mood-text {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-top: 15px;
+    min-height: 32px;
+    color: var(--hot-pink);
+  }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    max-width: 800px;
+    width: 100%;
+  }
+  .card {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    border-top: 6px solid var(--purple);
+    transition: transform 0.2s;
+  }
+  .card:hover { transform: translateY(-5px); }
+  .card h3 { color: var(--purple); margin-bottom: 8px; }
+  .card p { font-size: 0.95rem; line-height: 1.5; color: #555; }
+  .sparkle-particle {
+    position: fixed;
+    pointer-events: none;
+    font-size: 24px;
+    animation: floatUp 1.5s ease-out forwards;
+    z-index: 999;
+  }
+  @keyframes floatUp {
+    0% { opacity: 1; transform: translateY(0) scale(0.8); }
+    100% { opacity: 0; transform: translateY(-120px) scale(1.4) rotate(45deg); }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>✨ Unikitty! ✨</h1>
+  <p class="subtitle">Bem-vindo ao Reino Unikingdom — Onde a positividade e a matéria brilhante reinam!</p>
+</header>
+
+<main class="stage">
+  <svg id="unikittySvg" class="unikitty-svg bounce" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <!-- Horn -->
+    <polygon id="horn" points="100,10 86,58 114,58" fill="#00bfff" stroke="#0088cc" stroke-width="3"/>
+    <line x1="92" y1="32" x2="108" y2="28" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+    <line x1="89" y1="45" x2="111" y2="40" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+
+    <!-- Ears -->
+    <polygon id="leftEar" points="42,35 32,85 75,65" fill="#ff69b4" stroke="#d81b60" stroke-width="3"/>
+    <polygon points="46,48 40,78 65,65" fill="#ffb6c1"/>
+    <polygon id="rightEar" points="158,35 168,85 125,65" fill="#ff69b4" stroke="#d81b60" stroke-width="3"/>
+    <polygon points="154,48 160,78 135,65" fill="#ffb6c1"/>
+
+    <!-- Head -->
+    <rect id="head" x="45" y="55" width="110" height="90" rx="22" fill="#ff69b4" stroke="#d81b60" stroke-width="3"/>
+
+    <!-- Collar -->
+    <rect x="65" y="145" width="70" height="14" rx="6" fill="#00bfff" stroke="#0088cc" stroke-width="2"/>
+
+    <!-- Eyes (Happy Default) -->
+    <g id="eyesHappy">
+      <circle cx="76" cy="95" r="14" fill="#ffffff" stroke="#333" stroke-width="2"/>
+      <circle cx="78" cy="93" r="8" fill="#111"/>
+      <circle cx="81" cy="90" r="3" fill="#ffffff"/>
+      <path d="M58,86 L65,91 M60,80 L68,86" stroke="#111" stroke-width="2.5" stroke-linecap="round"/>
+
+      <circle cx="124" cy="95" r="14" fill="#ffffff" stroke="#333" stroke-width="2"/>
+      <circle cx="122" cy="93" r="8" fill="#111"/>
+      <circle cx="125" cy="90" r="3" fill="#ffffff"/>
+      <path d="M142,86 L135,91 M140,80 L132,86" stroke="#111" stroke-width="2.5" stroke-linecap="round"/>
+    </g>
+
+    <!-- Eyes (Rage Hidden by default) -->
+    <g id="eyesRage" style="display:none;">
+      <polygon points="60,82 90,95 62,105" fill="#ffd700" stroke="#800000" stroke-width="2"/>
+      <polygon points="140,82 110,95 138,105" fill="#ffd700" stroke="#800000" stroke-width="2"/>
+    </g>
+
+    <!-- Cheeks -->
+    <ellipse cx="64" cy="115" rx="8" ry="5" fill="#ff1493" opacity="0.6"/>
+    <ellipse cx="136" cy="115" rx="8" ry="5" fill="#ff1493" opacity="0.6"/>
+
+    <!-- Nose & Mouth -->
+    <polygon points="95,112 105,112 100,118" fill="#d81b60"/>
+    <path id="mouthHappy" d="M84,122 Q92,132 100,122 Q108,132 116,122" fill="none" stroke="#333" stroke-width="3" stroke-linecap="round"/>
+    <polygon id="mouthRage" points="78,122 122,122 115,138 85,138" fill="#ffffff" stroke="#800000" stroke-width="2.5" style="display:none;"/>
+  </svg>
+
+  <div id="moodText" class="mood-text">💖 Modo Super Feliz! Tudo é incrível! 💖</div>
+
+  <div class="controls">
+    <button class="btn-happy" onclick="setHappy()">😊 Super Feliz</button>
+    <button class="btn-sparkle" onclick="spawnSparkles()">✨ Matéria Brilhante</button>
+    <button class="btn-rage" onclick="setRage()">🔥 Modo Fúria</button>
+  </div>
+</main>
+
+<section class="cards">
+  <div class="card" style="border-top-color: #ff69b4;">
+    <h3>👑 Princesa Unikitty</h3>
+    <p>Governante do Reino Unikingdom, metade unicórnio e metade gatinha, sempre pronta para espalhar alegria.</p>
+  </div>
+  <div class="card" style="border-top-color: #00bfff;">
+    <h3>🐶 Príncipe Puppycorn</h3>
+    <p>O irmão mais novo, brincalhão e leal, que adora andar de skate e viver aventuras com os amigos.</p>
+  </div>
+  <div class="card" style="border-top-color: #ffd700;">
+    <h3>🦊 Dra. Fox e Hawkodile</h3>
+    <p>A cientista brilhante do castelo e o guarda-costas destemido que protegem o reino a todo custo.</p>
+  </div>
+</section>
+
+<script>
+  const svg = document.getElementById('unikittySvg');
+  const head = document.getElementById('head');
+  const leftEar = document.getElementById('leftEar');
+  const rightEar = document.getElementById('rightEar');
+  const horn = document.getElementById('horn');
+  const eyesHappy = document.getElementById('eyesHappy');
+  const eyesRage = document.getElementById('eyesRage');
+  const mouthHappy = document.getElementById('mouthHappy');
+  const mouthRage = document.getElementById('mouthRage');
+  const moodText = document.getElementById('moodText');
+
+  function setHappy() {
+    svg.className = 'unikitty-svg bounce';
+    head.setAttribute('fill', '#ff69b4');
+    leftEar.setAttribute('fill', '#ff69b4');
+    rightEar.setAttribute('fill', '#ff69b4');
+    horn.setAttribute('fill', '#00bfff');
+    eyesHappy.style.display = 'block';
+    eyesRage.style.display = 'none';
+    mouthHappy.style.display = 'block';
+    mouthRage.style.display = 'none';
+    moodText.style.color = '#ff1493';
+    moodText.textContent = '💖 Modo Super Feliz! Tudo é incrível! 💖';
+    spawnSparkles();
+  }
+
+  function setRage() {
+    svg.className = 'unikitty-svg rage';
+    head.setAttribute('fill', '#dc143c');
+    leftEar.setAttribute('fill', '#dc143c');
+    rightEar.setAttribute('fill', '#dc143c');
+    horn.setAttribute('fill', '#ff4500');
+    eyesHappy.style.display = 'none';
+    eyesRage.style.display = 'block';
+    mouthHappy.style.display = 'none';
+    mouthRage.style.display = 'block';
+    moodText.style.color = '#dc143c';
+    moodText.textContent = '🔥 RAAAAAGE! Não estrague a felicidade! 🔥';
+  }
+
+  function spawnSparkles() {
+    const emojis = ['✨', '💖', '⭐', '🌈', '🦄', '💎'];
+    for (let i = 0; i < 18; i++) {
+      const el = document.createElement('div');
+      el.className = 'sparkle-particle';
+      el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      el.style.left = (Math.random() * 90 + 5) + 'vw';
+      el.style.top = (Math.random() * 60 + 30) + 'vh';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 1500);
+    }
+  }
+</script>
+
+</body>
+</html>
